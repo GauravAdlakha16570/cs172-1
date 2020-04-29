@@ -19,6 +19,15 @@ Example usage:
 
 `./crawler.sh <seed-File:seed.txt> <num-pages: 10000> <hops-away: 6> <output-dir>`
 
+##
+
+###USAGE
+
+You will need a file containing a Twitter API key and a Twitter secret API key seperated by a newline character. This 
+file should be named `auth.txt`. After successfully authenticating the application, a file named `.token.txt` will
+be generated containing your final authentication tokens. Do not share the contents of this file with anyone. If this file
+is deleted, you will simply need to re-authenticate.
+
 ###Contributing
 
 Please only work in your own branches. Branches should follow the naming convention `dev_<your_first_name>_<feature_name>`.

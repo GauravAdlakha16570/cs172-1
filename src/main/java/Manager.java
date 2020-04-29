@@ -76,6 +76,7 @@ public class Manager {
 
         String consumerKey = "";
         String consumerSecret = "";
+        long userID = -1L;
 
         // Get the consumerKey and Secret
         try {
@@ -95,6 +96,13 @@ public class Manager {
         RequestToken requestToken = twitter.getOAuthRequestToken();
         AccessToken accessToken = null;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        if (new File(DEFAULT_TOKEN_DIR).exists()) {
+            Scanner scan = new Scanner(new File(DEFAULT_TOKEN_DIR));
+            accessToken = new AccessToken(scan.nextLine(), scan.nextLine(), scan.nextLong());
+            twitter.setOAuthAccessToken(accessToken);
+        }
+
         while (null == accessToken) {
             System.out.println("Open the following URL and grant access to your account:");
             System.out.println(requestToken.getAuthorizationURL());
@@ -122,7 +130,20 @@ public class Manager {
     }
 
     private static void storeAccessToken(long useId, AccessToken accessToken) {
-        //store accessToken.getToken()
-        //store accessToken.getTokenSecret()
+        File tokenFile = new File(DEFAULT_TOKEN_DIR);
+        try {
+            if (tokenFile.createNewFile()) {
+                FileWriter fw = new FileWriter(tokenFile);
+                fw.write(accessToken.getToken() + "\n");
+                fw.write(accessToken.getTokenSecret() + "\n");
+                fw.write(accessToken.getUserId() + "\n");
+                fw.close();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Something went wrong while saving the AccessToken!");
+            e.printStackTrace();
+        }
+
     }
 }
