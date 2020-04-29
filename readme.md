@@ -1,6 +1,6 @@
 ### CS172 Project
 
-Contributors: Aaron Sigal, <>, <>, <>
+Contributors: Aaron Sigal, Surya Kumaraguru, <>, <>
 
 ##
 
