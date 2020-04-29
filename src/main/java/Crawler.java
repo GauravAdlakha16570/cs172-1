@@ -8,6 +8,17 @@ public class Crawler {
 
     File output;
 
+    /*********************************/
+    /*      Constructors             */
+    /*********************************/
+
+    public Crawler() {
+
+    }
+
+    public Crawler(String outputDir) {
+
+    }
 
     /*********************************/
     /*      Life Cycle Methods       */
@@ -37,7 +48,6 @@ public class Crawler {
 
         return true; // By default, return true since nothing went wrong.
     }
-
 
 
     /*********************************/

@@ -6,7 +6,8 @@ Contributors: Aaron Sigal, Surya Kumaraguru, <>, <>
 
 ### Setup
 
-Simply clone the repository and open it up with a Maven-compatible IDE. IntelliJ IDEA is recommended.
+Simply clone the repository and open it up with a Maven-compatible IDE. IntelliJ IDEA is recommended. It is recommended 
+that JDK 1.8 is used and compiled at language level 1.5.
 
 ##
 
