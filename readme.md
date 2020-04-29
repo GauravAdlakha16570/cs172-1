@@ -1,6 +1,6 @@
 ### CS172 Project, Spring 2020
 
-Contributors: Aaron Sigal, <>, <>, <>
+Contributors: Aaron Sigal, Surya Kumaraguru, <>, <>
 
 ##
 
