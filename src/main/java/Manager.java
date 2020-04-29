@@ -1,4 +1,3 @@
-import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -14,9 +13,11 @@ public class Manager {
     /*      Constants                */
     /*********************************/
 
+    // Authentication stuff
     private static final String DEFAULT_AUTH_FILE_DIR = "auth.txt";
     private static final String DEFAULT_TOKEN_DIR     = ".token.txt";
 
+    // Input Parameter defaults
     private static final String DEFAULT_SEED_FILE_DIR = "seed.txt";
     private static final String DEFAULT_OUTPUT_DIR = "output";
     private static final int DEFAULT_NUM_PAGES = 10000;
@@ -28,7 +29,7 @@ public class Manager {
     /*      Main method              */
     /*********************************/
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         String seedDir = DEFAULT_SEED_FILE_DIR;
         String outputDir = DEFAULT_OUTPUT_DIR;
@@ -65,15 +66,28 @@ public class Manager {
             System.exit(-1);
         }
 
-        // Initiailize seed file
+        // Initialize seed file and check if it exists
         File seedFile = new File(seedDir);
+        if (!seedFile.exists()) {
+            System.out.println("Cannot locate seed file: " + seedDir + "!");
+            return;
+        }
+
+
     }
+
+
+
+    /*********************************/
+    /*      Helper Methods           */
+    /*********************************/
 
     // Adapted from: http://twitter4j.org/en/code-examples.html
     // @Param 0: The file that contains the required API keys
-    // @Desc   : A function that takes care of authorizing this application to run on a twitter account
+    // @Desc   : A method that takes care of authorizing this application to run on a twitter account
     private static void Authorize(File authFile) throws TwitterException, IOException {
 
+        // Vars to store the API keys
         String consumerKey = "";
         String consumerSecret = "";
         long userID = -1L;
@@ -81,8 +95,7 @@ public class Manager {
         // Get the consumerKey and Secret
         try {
             Scanner scan = new Scanner(authFile);
-
-            consumerKey = scan.nextLine();
+            consumerKey = scan.nextLine(); // Try to read the keys from the keyfile. This assumes formatting is correct.
             consumerSecret = scan.nextLine();
         } catch (Exception e) {
             System.out.println("Something went wrong when reading " + DEFAULT_AUTH_FILE_DIR + "!");
@@ -97,9 +110,10 @@ public class Manager {
         AccessToken accessToken = null;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+        // If an authentication token has been obtained on this machine before, just use that instead of re-authenticating
         if (new File(DEFAULT_TOKEN_DIR).exists()) {
             Scanner scan = new Scanner(new File(DEFAULT_TOKEN_DIR));
-            accessToken = new AccessToken(scan.nextLine(), scan.nextLine(), scan.nextLong());
+            accessToken = new AccessToken(scan.nextLine(), scan.nextLine(), scan.nextLong()); // This assumes that the .token.txt file is not corrupted.
             twitter.setOAuthAccessToken(accessToken);
         }
 
@@ -129,6 +143,9 @@ public class Manager {
 
     }
 
+    // @Param 0: Twitter User ID
+    // @Param 1: Twitter access Token
+    // @Desc   : A function that saves local file containing the access token
     private static void storeAccessToken(long useId, AccessToken accessToken) {
         File tokenFile = new File(DEFAULT_TOKEN_DIR);
         try {
