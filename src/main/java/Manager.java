@@ -1,8 +1,7 @@
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import twitter4j.*;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 import java.io.*;
 import java.util.Scanner;
@@ -23,7 +22,11 @@ public class Manager {
     private static final int DEFAULT_NUM_PAGES = 10000;
     private static final int DEFAULT_NUM_HOPS = 6;
 
+    /*********************************/
+    /*      Class Variables          */
+    /*********************************/
 
+    public static TweetRepository tweetRepository = new TweetRepository();
 
     /*********************************/
     /*      Main method              */
@@ -58,20 +61,31 @@ public class Manager {
         System.out.println("PARAM3: " + outputDir);
 
         // Authorize the user to gain access to the API
+        // The factory instance is re-useable and thread safe.
+        Twitter twitter = TwitterFactory.getSingleton();
+        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+
         try {
-            Authorize(new File(DEFAULT_AUTH_FILE_DIR));
+            configurationBuilder = Authorize(twitter, new File(DEFAULT_AUTH_FILE_DIR));
         } catch (Exception e) {
             System.out.println("Something went wrong while authorizing!");
             e.printStackTrace();
             System.exit(-1);
         }
 
-        // Initialize seed file and check if it exists
-        File seedFile = new File(seedDir);
-        if (!seedFile.exists()) {
-            System.out.println("Cannot locate seed file: " + seedDir + "!");
-            return;
-        }
+
+
+
+
+        /**** Start the Crawling ****/
+        tweetRepository.init(); // Initialize the tweet repository
+        Crawler crawler = new Crawler();
+        crawler.init();
+
+        TwitterStream twitterStream = new TwitterStreamFactory(configurationBuilder.build()).getInstance();
+        twitterStream.addListener(crawler);
+        twitterStream.sample();
+        //while(true) {System.out.println(tweetRepository.getSize());}
     }
 
 
@@ -83,7 +97,7 @@ public class Manager {
     // Adapted from: http://twitter4j.org/en/code-examples.html
     // @Param 0: The file that contains the required API keys
     // @Desc   : A method that takes care of authorizing this application to run on a twitter account
-    private static void Authorize(File authFile) throws TwitterException, IOException {
+    private static ConfigurationBuilder Authorize(Twitter twitter, File authFile) throws TwitterException, IOException {
 
         // Vars to store the API keys
         String consumerKey = "";
@@ -101,8 +115,7 @@ public class Manager {
             System.exit(-1);
         }
 
-        // The factory instance is re-useable and thread safe.
-        Twitter twitter = TwitterFactory.getSingleton();
+
         twitter.setOAuthConsumer(consumerKey, consumerSecret);
         RequestToken requestToken = twitter.getOAuthRequestToken();
         AccessToken accessToken = null;
@@ -134,11 +147,17 @@ public class Manager {
                 }
             }
         }
+        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+        configurationBuilder.setOAuthConsumerKey(consumerKey)
+                .setOAuthConsumerSecret(consumerSecret)
+                .setOAuthAccessToken(accessToken.getToken())
+                .setOAuthAccessTokenSecret(accessToken.getTokenSecret());
 
-        System.out.println("It worked! You're now authorized!");
+        if (twitter.getAuthorization().isEnabled()) System.out.println("It worked! You're now authorized!");
         //persist to the accessToken for future reference.
         storeAccessToken(twitter.verifyCredentials().getId(), accessToken);
 
+        return configurationBuilder;
     }
 
     // @Param 0: Twitter User ID
