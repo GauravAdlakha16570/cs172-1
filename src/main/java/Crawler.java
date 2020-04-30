@@ -1,6 +1,7 @@
 import java.io.File;
+import twitter4j.*;
 
-public class Crawler {
+public class Crawler implements StatusListener {
 
     /*********************************/
     /*      Class Variables          */
@@ -60,5 +61,31 @@ public class Crawler {
         return "Placeholder Text";
     }
 
+    /*********************************/
+    /*      StatusListener Methods   */
+    /*********************************/
 
+    public void onStatus(Status status) {
+
+    }
+
+    public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
+
+    }
+
+    public void onTrackLimitationNotice(int i) {
+
+    }
+
+    public void onScrubGeo(long l, long l1) {
+
+    }
+
+    public void onStallWarning(StallWarning stallWarning) {
+
+    }
+
+    public void onException(Exception e) {
+
+    }
 } // End of Crawler class
