@@ -75,18 +75,43 @@ public class Manager {
 
 
 
-
-
         /**** Start the Crawling ****/
         tweetRepository.init(); // Initialize the tweet repository
-        Crawler crawler = new Crawler();
-        crawler.init();
+        Crawler crawler = new Crawler(); // Create crawler
+        crawler.init();                  // Initialize it
 
+        // Set up the streaming API using the credentials created earlier
         TwitterStream twitterStream = new TwitterStreamFactory(configurationBuilder.build()).getInstance();
         twitterStream.addListener(crawler);
-        twitterStream.sample();
-        //while(true) {System.out.println(tweetRepository.getSize());}
+
+        // Set up stream filters
+        FilterQuery query = new FilterQuery().language("en").track("trump");
+
+        twitterStream.filter(query); // Start the stream
+
+        // Perform repository checking until the system exits
+        while(true) {
+            if (tweetRepository.getSize() >= tweetRepository.MAX_ENTRIES) {
+                System.out.println("[INFO]: Writing tweets to disk...");
+                File f = new File(DEFAULT_OUTPUT_DIR);
+                f.mkdir();
+                synchronized (tweetRepository) {
+                    tweetRepository.writeToFile(DEFAULT_OUTPUT_DIR + "/" + Long.toString(System.currentTimeMillis() % 1000) + "tweets.tsv");
+                }
+                System.out.print("[DEBUG]: Exiting system...");
+                System.exit(0);
+            } else {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    System.out.println("[INFO]: Main thread woken up externally!");
+                }
+                //System.out.println("[DEBUG]: tweetRepository size: " + tweetRepository.getSize());
+            }
+        }
     }
+
+
 
 
 

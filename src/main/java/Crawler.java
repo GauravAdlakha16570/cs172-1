@@ -90,7 +90,7 @@ public class Crawler implements StatusListener {
         } catch (NullPointerException npe) {
             fields[2] = "0";
         }
-        fields[3] = tweet.getText();
+        fields[3] = tweet.getText().replaceAll("\n", " ");
 
         return fields;
     }
@@ -111,7 +111,12 @@ public class Crawler implements StatusListener {
                         tweets.drainTo(tempTweets);
 
                         System.out.println("Inserting " + tempTweets.size() + " tweets...");
-                        for (Status s : tempTweets) tweetRepository.insert(getTweetFields(s));
+
+                        for (Status s : tempTweets) {
+                            synchronized (tweetRepository) {
+                                tweetRepository.insert(getTweetFields(s));
+                            }
+                        }
                         System.out.println(" done.");
                     }
 
@@ -135,7 +140,6 @@ public class Crawler implements StatusListener {
 
     @Override
     public void onStatus(Status status) {
-        System.out.println("Adding status to tweets...");
         tweets.add(status);
     }
 
