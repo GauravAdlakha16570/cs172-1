@@ -16,6 +16,9 @@ public class Manager {
     private static final String DEFAULT_AUTH_FILE_DIR = "auth.txt";
     private static final String DEFAULT_TOKEN_DIR     = ".token.txt";
 
+    // Stream stuff
+    final static String[] FILTER_ARGS = {"at"};
+
     // Input Parameter defaults
     private static final String DEFAULT_SEED_FILE_DIR = "seed.txt";
     private static final String DEFAULT_OUTPUT_DIR = "output";
@@ -85,8 +88,7 @@ public class Manager {
         twitterStream.addListener(crawler);
 
         // Set up stream filters
-        FilterQuery query = new FilterQuery().language("en").track("trump");
-
+        FilterQuery query = new FilterQuery().language("en").track(FILTER_ARGS);
         twitterStream.filter(query); // Start the stream
 
         // Perform repository checking until the system exits
@@ -102,7 +104,7 @@ public class Manager {
                 System.exit(0);
             } else {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     System.out.println("[INFO]: Main thread woken up externally!");
                 }
@@ -111,16 +113,13 @@ public class Manager {
         }
     }
 
-
-
-
-
     /*********************************/
     /*      Helper Methods           */
     /*********************************/
 
     // Adapted from: http://twitter4j.org/en/code-examples.html
-    // @Param 0: The file that contains the required API keys
+    // @Param 0: The Twitter object to modify
+    // @Param 1: The file that contains the required API keys
     // @Desc   : A method that takes care of authorizing this application to run on a twitter account
     private static ConfigurationBuilder Authorize(Twitter twitter, File authFile) throws TwitterException, IOException {
 

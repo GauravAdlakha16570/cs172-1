@@ -85,34 +85,37 @@ public class Crawler implements StatusListener {
         String[] fields = new String[TweetRepository.NUM_TWEET_FIELDS - 1];
 
         fields[0] = tweet.getUser().getName();
-        fields[1] = tweet.getUser().getEmail();
+        fields[1] = tweet.getUser().getDescription();
         try {
             fields[2] = tweet.getGeoLocation().toString();
         } catch (NullPointerException npe) {
-            fields[2] = "0";
+            fields[2] = "0,0";
         }
         fields[TweetRepository.TWEET_TEXT_INDEX] = tweet.getText().replaceAll("\n", " ");
 
         return fields;
     }
 
+    // A private anonymous class that does the intermediary processing for the crawler. It adds elements from the stream to the
+    // tweetRepository in batches as its buffer fills up.
     private Runnable TweetAnalyzerClient(final TweetRepository tweetRepository) {
         return new Runnable() {
 
             @Override
             public void run() {
-                int id = abs((int) (System.nanoTime()%100000000));
+                int id = abs((int) (System.nanoTime()%100000000)); // ID for housekeeping purposes
                 System.out.println("[INFO]: Analyzer " + id + " has started running");
 
-                List<Status> tempTweets = new ArrayList<Status>();
+                List<Status> tempTweets = new ArrayList<Status>(); // process buffer
 
                 while (true) {
-                    if (tweets.size() > 0) {
-                        tempTweets.clear();
-                        tweets.drainTo(tempTweets);
+                    if (tweets.size() > 0) {        // Dump the current batch of tweets into the processing buffer
+                        tempTweets.clear();         // Clear the buffer
+                        tweets.drainTo(tempTweets); // Dump
 
-                        System.out.println("Inserting " + tempTweets.size() + " tweets...");
+                        System.out.print("[DEBUG]: Inserting " + tempTweets.size() + " tweets...");
 
+                        // Use a thread-safe approach to insert the tweets in the buffer into the tweetRepository
                         for (Status s : tempTweets) {
                             synchronized (tweetRepository) {
                                 tweetRepository.insert(getTweetFields(s));
