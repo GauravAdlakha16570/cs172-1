@@ -78,6 +78,7 @@ public class Crawler implements StatusListener {
     /*********************************/
     /*      Helper Methods           */
     /*********************************/
+
     // @Param 0: The object containing a single tweet's data
     // @Desc   : Generates a line of text containing all relevant details about a given tweet.
     private String[] getTweetFields(Status tweet) {
@@ -90,7 +91,7 @@ public class Crawler implements StatusListener {
         } catch (NullPointerException npe) {
             fields[2] = "0";
         }
-        fields[3] = tweet.getText().replaceAll("\n", " ");
+        fields[TweetRepository.TWEET_TEXT_INDEX] = tweet.getText().replaceAll("\n", " ");
 
         return fields;
     }

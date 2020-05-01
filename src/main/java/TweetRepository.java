@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class TweetRepository {
 
     public static final int NUM_TWEET_FIELDS = 5;
+    public static final int TWEET_TEXT_INDEX = 3;
     //public static final int MAX_ENTRIES = (int)(500000.0 / (100.0 / 17.3)); // Total number of entries this structure can have before it stops recording data.
     public static final int MAX_ENTRIES = 100; // Debugging value
 
@@ -31,6 +32,9 @@ public class TweetRepository {
     /*      Access Methods           */
     /*********************************/
 
+    // @Param 0: An array of strings that each contain a field from a tweet
+    // @Desc   : Stores a tweet in the tweets object and prepares it for the URLGrabber
+    // @Returns: A Boolean representing whether or not the tweet was successfully added to tweets.
     public boolean insert(String[] tweetFields) {
         if (tweetFields.length != NUM_TWEET_FIELDS - 1) {    // Number of fields -1 because we won't
             System.out.println("Failed to insert!");         // have the final field, URL title, until after the URL grabber adds it
@@ -55,6 +59,8 @@ public class TweetRepository {
         return tweets.size();
     }
 
+    // @Param 0: The path to the file to write
+    // @Desc   : Writes the current object to a file in TSV format
     public void writeToFile(String path) {
         File file = new File(path);
 
@@ -63,28 +69,24 @@ public class TweetRepository {
             return;
         }
 
+        // Try to write the file in TSV format
         try {
-            file.createNewFile();
-            FileWriter fw = new FileWriter(file);
+            file.createNewFile();                 // Create the file
+            FileWriter fw = new FileWriter(file); // Object for writing to file
 
-            for(String[] as : tweets) {
+            for(String[] as : tweets) {           // For each array of strings in tweets
                 for (String s : as) {
-                    fw.write(s + "\t");
+                    fw.write(s + "\t");        // Write each tweet field to a single line separated by the tab character.
                 }
-                fw.write("\n");
+                fw.write("\n");                // Finish the line off with a newline char
             }
-
-            fw.close();
+            fw.close(); // Close the file writer.
 
         } catch (IOException e) {
             System.out.println("Cannot save to disk, file " + path + " cannot be created!");
             e.printStackTrace();
             return;
         }
-
-
-
-
     }
 
 }
