@@ -20,6 +20,8 @@ public class Crawler implements StatusListener {
     final long THREADS_DELAY = 1;
     final long TWEETS_SAVING_TIME = 1000;
 
+    final static String DEFAULT_USER_DESCRIPTION = "<no bio>";
+
     private LinkedBlockingQueue<Status> tweets;
 
     /*********************************/
@@ -84,10 +86,16 @@ public class Crawler implements StatusListener {
     private String[] getTweetFields(Status tweet) {
         String[] fields = new String[TweetRepository.NUM_TWEET_FIELDS - 1];
 
-        fields[0] = tweet.getUser().getName();
-        fields[1] = tweet.getUser().getDescription();
+        // Grab fields
+        fields[0] = tweet.getUser().getName().replaceAll("\n", " "); // User's Twitter Name
+
+        if (tweet.getUser().getDescription() != "" && tweet.getUser().getDescription() != null) {
+            fields[1] = tweet.getUser().getDescription().replaceAll("\n", " ");
+        } else {
+            fields[1] = DEFAULT_USER_DESCRIPTION;
+        }
         try {
-            fields[2] = tweet.getGeoLocation().toString();
+            fields[2] = tweet.getGeoLocation().toString().replaceAll("\n", " ");
         } catch (NullPointerException npe) {
             fields[2] = "0,0";
         }

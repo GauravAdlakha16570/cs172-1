@@ -133,14 +133,15 @@ public class Manager {
             Scanner scan = new Scanner(authFile);
             consumerKey = scan.nextLine(); // Try to read the keys from the keyfile. This assumes formatting is correct.
             consumerSecret = scan.nextLine();
+            twitter.setOAuthConsumer(consumerKey, consumerSecret);
         } catch (Exception e) {
             System.out.println("Something went wrong when reading " + DEFAULT_AUTH_FILE_DIR + "!");
             e.printStackTrace();
-            System.exit(-1);
+            //System.exit(-1);
         }
 
 
-        twitter.setOAuthConsumer(consumerKey, consumerSecret);
+       
         RequestToken requestToken = twitter.getOAuthRequestToken();
         AccessToken accessToken = null;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
