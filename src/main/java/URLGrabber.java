@@ -1,3 +1,8 @@
+import java.net.URL;
+import org.jsoup.*;
+import org.jsoup.nodes.Document;
+
+
 public class URLGrabber implements Runnable{
 
     boolean busy = false;
@@ -47,7 +52,19 @@ public class URLGrabber implements Runnable{
     // @Desc:    Parse a URL from a string
     // @Returns: A string containing the first-located URL. Return an empty string if nothing is found.
     private String parseURL(String s) {
-
+                 URL url = new URL(s);
+		 s = url.getHost();
         return s;
     }
+}
+
+//returns the title of the document(url) passed in as a string
+//paramater 0: url in string form
+//return: string containing the title of the page
+public String urlTitle(string url) {
+	Document urltitle;
+	
+	urltitle = Jsoup.connect(url).get();
+	return urltitle.title();
+	
 }
