@@ -52,19 +52,29 @@ public class URLGrabber implements Runnable{
     // @Desc:    Parse a URL from a string
     // @Returns: A string containing the first-located URL. Return an empty string if nothing is found.
     private String parseURL(String s) {
-                 URL url = new URL(s);
+                try {
+		       	URL url = new URL(s);
 		 s = url.getHost();
         return s;
+		}
+		catch (Exception e) {
+			return "could not find URL";
+		}
     }
-}
+
 
 //returns the title of the document(url) passed in as a string
 //paramater 0: url in string form
 //return: string containing the title of the page
-public String urlTitle(string url) {
+private String urlTitle(String url) {
 	Document urltitle;
-	
+	try {	
 	urltitle = Jsoup.connect(url).get();
 	return urltitle.title();
+	}
+	catch (Exception e) {
+		return "no title exists";
+	}
 	
+}
 }
