@@ -54,7 +54,7 @@ public class URLGrabber implements Runnable{
     private String parseURL(String s) {
             String b = " ";
 	 if (s.contains("http")) {  
-	   b = s.substring(s.indexOf("https"), s.length());
+	   b = s.substring(s.indexOf("http"), s.length());
 	 }
 	   return b; 
 	  //indexOf(String str) Returns the index within this string of the first occurrence of the specified substring
@@ -66,6 +66,16 @@ public class URLGrabber implements Runnable{
 	//	catch (Exception e) {
 	//		return "";
 	//	}
+=======
+                try {
+		       	URL url = new URL(s);
+		 s = url.getHost(); //adapted from https://docs.oracle.com/javase/tutorial/networking/urls/urlInfo.html
+        return s;
+		}
+		catch (Exception e) {
+			return "could not find URL";
+		}
+>>>>>>> 2021e0ceee6a3491b7c15caebf6f86de326862c4
     }
 
 
@@ -76,7 +86,7 @@ private String urlTitle(String url) {
 	Document urltitle;
 	try {	
 	urltitle = Jsoup.connect(url).get();
-	return urltitle.title();
+	return urltitle.title(); // adapted from https://jsoup.org/cookbook/input/load-document-from-url
 	}
 	catch (Exception e) {
 		return "no title exists";
