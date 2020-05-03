@@ -52,14 +52,20 @@ public class URLGrabber implements Runnable{
     // @Desc:    Parse a URL from a string
     // @Returns: A string containing the first-located URL. Return an empty string if nothing is found.
     private String parseURL(String s) {
-                try {
-		       	URL url = new URL(s);
-		 s = url.getHost();
-        return s;
-		}
-		catch (Exception e) {
-			return "could not find URL";
-		}
+            String b = " ";
+	 if (s.contains("http")) {  
+	   b = s.substring(s.indexOf("https"), s.length());
+	 }
+	   return b; 
+	  //indexOf(String str) Returns the index within this string of the first occurrence of the specified substring
+	   // try {
+	//	       	URL url = new URL(b);
+	//	 b = url.getHost();
+       // return b;
+	//	}
+	//	catch (Exception e) {
+	//		return "";
+	//	}
     }
 
 
