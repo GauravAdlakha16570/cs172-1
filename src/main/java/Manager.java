@@ -21,7 +21,7 @@ public class Manager {
 
     // Input Parameter defaults
     private static final String DEFAULT_SEED_FILE_DIR = "seed.txt";
-    private static final String DEFAULT_OUTPUT_DIR = "output";
+    public static final String DEFAULT_OUTPUT_DIR = "output";
     private static final int DEFAULT_NUM_PAGES = 10000;
     private static final int DEFAULT_NUM_HOPS = 6;
 
@@ -93,33 +93,36 @@ public class Manager {
 
         // Set up URLGrabber
         URLGrabber urlGrabber = new URLGrabber();
-        urlGrabber.run();
+
+        Thread t1 = new Thread();
 
         // Perform repository checking until the system exits
         while(true) {
             if (tweetRepository.getSize() >= tweetRepository.MAX_ENTRIES) {
 
                 // Stall until repository is done being URL-Grabbed
-                System.out.println("[INFO]: Grabbing URLs...");
                 while(!tweetRepository.getGrabbed()) {
                     if (urlGrabber.busy == false) {
                         synchronized(tweetRepository) {
-                            urlGrabber.processRepository(tweetRepository);
+
+
+                                if (!t1.isAlive()) {
+                                    System.out.println("[INFO]: Spawning new thread for URLGrabber...");
+
+                                    urlGrabber.addRepository(tweetRepository);
+                                    t1 = new Thread(urlGrabber, "URLGrabber");
+                                    t1.start();
+
+                                    System.out.println("done");
+                                } else {
+                                    if (!urlGrabber.repositoryQueue.contains(tweetRepository)) {
+                                        System.out.println("[INFO]: Adding repository to URLGrabber...");
+                                        urlGrabber.addRepository(tweetRepository);
+                                    }
+                                }
                         }
                     }
-
                 }
-
-
-                System.out.println("[INFO]: Writing tweets to disk...");
-                File f = new File(DEFAULT_OUTPUT_DIR);
-                f.mkdir();
-                synchronized (tweetRepository) {
-                    tweetRepository.writeToFile(DEFAULT_OUTPUT_DIR + "/" + Long.toString(System.currentTimeMillis() % 1000) + "tweets.tsv");
-                }
-                System.out.print("[DEBUG]: Exiting system...");
-
-                System.exit(0);
             } else {
                 try {
                     Thread.sleep(100);

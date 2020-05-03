@@ -11,8 +11,8 @@ public class TweetRepository {
 
     public static final int NUM_TWEET_FIELDS = 5;
     public static final int TWEET_TEXT_INDEX = 3;
-    //public static final int MAX_ENTRIES = (int)(500000.0 / (100.0 / 17.3)); // Total number of entries this structure can have before it stops recording data.
-    public static final int MAX_ENTRIES = 100; // Debugging value
+    //public static final int MAX_ENTRIES = (int)(250000.0 / (100.0 / 17.3)); // Total number of entries this structure can have before it stops recording data.
+    public static final int MAX_ENTRIES = 500; // Debugging value
 
     ArrayList<String[]> tweets;
 
@@ -85,8 +85,12 @@ public class TweetRepository {
             FileWriter fw = new FileWriter(file); // Object for writing to file
 
             for(String[] as : tweets) {           // For each array of strings in tweets
-                for (String s : as) {
-                    fw.write(s + "\t");        // Write each tweet field to a single line separated by the tab character.
+                for (int i = 0; i < as.length; i++) {
+                    if (i == as.length - 1) {
+                        fw.write(as[i]);
+                    } else {
+                        fw.write(as[i] + "\t");        // Write each tweet field to a single line separated by the tab character.
+                    }
                 }
                 fw.write("\n");                // Finish the line off with a newline char
             }
@@ -98,5 +102,7 @@ public class TweetRepository {
             return;
         }
     }
+
+
 
 }

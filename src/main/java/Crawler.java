@@ -86,20 +86,24 @@ public class Crawler implements StatusListener {
     private String[] getTweetFields(Status tweet) {
         String[] fields = new String[TweetRepository.NUM_TWEET_FIELDS - 1];
 
-        // Grab fields
-        fields[0] = tweet.getUser().getName().replaceAll("\n", " "); // User's Twitter Name
+        // User's Twitter Name
+        fields[0] = sanitizeString(tweet.getUser().getName());
 
+        // User's Bio
         if (tweet.getUser().getDescription() != "" && tweet.getUser().getDescription() != null) {
-            fields[1] = tweet.getUser().getDescription().replaceAll("\n", " ");
+            fields[1] = sanitizeString(tweet.getUser().getDescription().replaceAll("\n", ""));
         } else {
             fields[1] = DEFAULT_USER_DESCRIPTION;
         }
+
+        // User's Location
         try {
-            fields[2] = tweet.getGeoLocation().toString().replaceAll("\n", " ");
+            fields[2] = sanitizeString(tweet.getGeoLocation().toString().replaceAll("\n", ""));
         } catch (NullPointerException npe) {
             fields[2] = "0,0";
         }
-        fields[TweetRepository.TWEET_TEXT_INDEX] = tweet.getText().replaceAll("\n", " ");
+        // Test of User's Tweet
+        fields[TweetRepository.TWEET_TEXT_INDEX] = sanitizeString(tweet.getText().replaceAll("\n", ""));
 
         return fields;
     }
@@ -144,6 +148,10 @@ public class Crawler implements StatusListener {
                 }
             }
         };
+    }
+
+    public static String sanitizeString(final String s) {
+        return s.replaceAll("\n", " ").replaceAll("\t", " ").replaceAll("," , ".").replaceAll("\"", "").replaceAll("\\P{Print}", "");
     }
 
     /*********************************/
