@@ -56,6 +56,14 @@ public class URLGrabber implements Runnable{
 	 if (s.contains("http")) {  
 	   b = s.substring(s.indexOf("http"), s.length());
 	 }
+	 else if (s.contains(".com") {
+		  for(int i = s.indexOf(".com"); i > 0; i-- ) {			       
+			 if(s.charAt(i) == ' ') { 
+		         b = s.substring(i + 1, s.indexOf(".com") + 4);
+	                 break;
+                   } 		
+		  }
+	       }
 	   return b; 
 	  //indexOf(String str) Returns the index within this string of the first occurrence of the specified substring
 	   // try {
