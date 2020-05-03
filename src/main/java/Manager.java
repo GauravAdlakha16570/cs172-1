@@ -91,9 +91,26 @@ public class Manager {
         FilterQuery query = new FilterQuery().language("en").track(FILTER_ARGS);
         twitterStream.filter(query); // Start the stream
 
+        // Set up URLGrabber
+        URLGrabber urlGrabber = new URLGrabber();
+        urlGrabber.run();
+
         // Perform repository checking until the system exits
         while(true) {
             if (tweetRepository.getSize() >= tweetRepository.MAX_ENTRIES) {
+
+                // Stall until repository is done being URL-Grabbed
+                System.out.println("[INFO]: Grabbing URLs...");
+                while(!tweetRepository.getGrabbed()) {
+                    if (urlGrabber.busy == false) {
+                        synchronized(tweetRepository) {
+                            urlGrabber.processRepository(tweetRepository);
+                        }
+                    }
+
+                }
+
+
                 System.out.println("[INFO]: Writing tweets to disk...");
                 File f = new File(DEFAULT_OUTPUT_DIR);
                 f.mkdir();
@@ -101,6 +118,7 @@ public class Manager {
                     tweetRepository.writeToFile(DEFAULT_OUTPUT_DIR + "/" + Long.toString(System.currentTimeMillis() % 1000) + "tweets.tsv");
                 }
                 System.out.print("[DEBUG]: Exiting system...");
+
                 System.exit(0);
             } else {
                 try {

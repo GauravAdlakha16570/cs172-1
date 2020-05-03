@@ -16,6 +16,8 @@ public class TweetRepository {
 
     ArrayList<String[]> tweets;
 
+    public boolean isGrabbed = false;
+
     /*********************************/
     /*      Life Cycle Methods       */
     /*********************************/
@@ -31,6 +33,14 @@ public class TweetRepository {
     /*********************************/
     /*      Access Methods           */
     /*********************************/
+
+    public void setGrabbed(boolean isGrabbed) {
+        this.isGrabbed = isGrabbed;
+    }
+
+    public boolean getGrabbed() {
+        return isGrabbed;
+    }
 
     // @Param 0: An array of strings that each contain a field from a tweet
     // @Desc   : Stores a tweet in the tweets object and prepares it for the URLGrabber
