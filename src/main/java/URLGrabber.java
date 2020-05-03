@@ -54,7 +54,7 @@ public class URLGrabber implements Runnable{
     private String parseURL(String s) {
                 try {
 		       	URL url = new URL(s);
-		 s = url.getHost();
+		 s = url.getHost(); //adapted from https://docs.oracle.com/javase/tutorial/networking/urls/urlInfo.html
         return s;
 		}
 		catch (Exception e) {
@@ -70,7 +70,7 @@ private String urlTitle(String url) {
 	Document urltitle;
 	try {	
 	urltitle = Jsoup.connect(url).get();
-	return urltitle.title();
+	return urltitle.title(); // adapted from https://jsoup.org/cookbook/input/load-document-from-url
 	}
 	catch (Exception e) {
 		return "no title exists";
