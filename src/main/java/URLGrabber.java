@@ -65,17 +65,7 @@ public class URLGrabber implements Runnable{
 	//	}
 	//	catch (Exception e) {
 	//		return "";
-	//	}
-=======
-                try {
-		       	URL url = new URL(s);
-		 s = url.getHost(); //adapted from https://docs.oracle.com/javase/tutorial/networking/urls/urlInfo.html
-        return s;
-		}
-		catch (Exception e) {
-			return "could not find URL";
-		}
->>>>>>> 2021e0ceee6a3491b7c15caebf6f86de326862c4
+	
     }
 
 
