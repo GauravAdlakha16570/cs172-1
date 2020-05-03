@@ -102,22 +102,22 @@ public class Manager {
 
                 // Stall until repository is done being URL-Grabbed
                 while(!tweetRepository.getGrabbed()) {
-                    if (urlGrabber.busy == false) {
-                        synchronized(tweetRepository) {
+                    if (urlGrabber.busy == false) { // If the URLGrabber is ready to accept new work
+                        synchronized(tweetRepository) { // Get synchronous access to the repo we want to process
 
 
-                                if (!t1.isAlive()) {
+                                if (!t1.isAlive()) { // Check if the URLGrabber thread is alive. If it isn't:
                                     System.out.println("[INFO]: Spawning new thread for URLGrabber...");
 
-                                    urlGrabber.addRepository(tweetRepository);
-                                    t1 = new Thread(urlGrabber, "URLGrabber");
-                                    t1.start();
+                                    urlGrabber.addRepository(tweetRepository);    // Add the repository to the URLGrabber
+                                    t1 = new Thread(urlGrabber, "URLGrabber"); // Create a new thread for the URLGrabber
+                                    t1.start();                                   // Start the grabber's thread
 
                                     System.out.println("done");
-                                } else {
-                                    if (!urlGrabber.repositoryQueue.contains(tweetRepository)) {
+                                } else { // If the thread already exists
+                                    if (!urlGrabber.repositoryQueue.contains(tweetRepository)) { // If didn't we already added the repo to the URLGrabber's queue
                                         System.out.println("[INFO]: Adding repository to URLGrabber...");
-                                        urlGrabber.addRepository(tweetRepository);
+                                        urlGrabber.addRepository(tweetRepository); // Add to URLGrabber's queue
                                     }
                                 }
                         }
@@ -125,11 +125,10 @@ public class Manager {
                 }
             } else {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(1000); // Wait
                 } catch (InterruptedException e) {
                     System.out.println("[INFO]: Main thread woken up externally!");
                 }
-                //System.out.println("[DEBUG]: tweetRepository size: " + tweetRepository.getSize());
             }
         }
     }

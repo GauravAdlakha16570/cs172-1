@@ -20,9 +20,12 @@ public class Crawler implements StatusListener {
     final long THREADS_DELAY = 1;
     final long TWEETS_SAVING_TIME = 1000;
 
+    boolean paused = false;
+
     final static String DEFAULT_USER_DESCRIPTION = "<no bio>";
 
     private LinkedBlockingQueue<Status> tweets;
+    private boolean pasued = false;
 
     /*********************************/
     /*      Constructors             */
@@ -60,18 +63,21 @@ public class Crawler implements StatusListener {
 
     // @Desc: Temporarily stops the crawler
     public boolean pause() {
-
+        pasued = true;
         return true; // By default, return true since nothing went wrong.
     }
 
     // @Desc: Crawler stars crawling
     public boolean start() {
-
+        paused = false;
         return true; // By default, return true since nothing went wrong.
     }
 
     // @Desc: Stops the crawler object. It dumps its data and leaves memory.
     public boolean stop() {
+        pasued = true;
+
+        // Do other stuff to destroy the crawler
 
         return true; // By default, return true since nothing went wrong.
     }
@@ -102,7 +108,8 @@ public class Crawler implements StatusListener {
         } catch (NullPointerException npe) {
             fields[2] = "0,0";
         }
-        // Test of User's Tweet
+
+        // Text of User's Tweet
         fields[TweetRepository.TWEET_TEXT_INDEX] = sanitizeString(tweet.getText().replaceAll("\n", ""));
 
         return fields;
@@ -121,7 +128,7 @@ public class Crawler implements StatusListener {
                 List<Status> tempTweets = new ArrayList<Status>(); // process buffer
 
                 while (true) {
-                    if (tweets.size() > 0) {        // Dump the current batch of tweets into the processing buffer
+                    if (tweets.size() > 0 && pasued == false) {        // Dump the current batch of tweets into the processing buffer
                         tempTweets.clear();         // Clear the buffer
                         tweets.drainTo(tempTweets); // Dump
 
@@ -129,8 +136,8 @@ public class Crawler implements StatusListener {
 
                         // Use a thread-safe approach to insert the tweets in the buffer into the tweetRepository
                         for (Status s : tempTweets) {
-                            synchronized (tweetRepository) {
-                                tweetRepository.insert(getTweetFields(s));
+                            synchronized (tweetRepository) { // Ensure synchronous access across threads
+                                tweetRepository.insert(getTweetFields(s)); // Add the tweet array to the repository
                             }
                         }
                         System.out.println(" done.");
@@ -153,6 +160,15 @@ public class Crawler implements StatusListener {
     public static String sanitizeString(final String s) {
         return s.replaceAll("\n", " ").replaceAll("\t", " ").replaceAll("," , ".").replaceAll("\"", "").replaceAll("\\P{Print}", "");
     }
+
+    /*********************************/
+    /*      Accessor Methods         */
+    /*********************************/
+    public boolean isPaused() {
+        return paused;
+    }
+
+
 
     /*********************************/
     /*      StatusListener Methods   */
