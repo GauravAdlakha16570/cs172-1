@@ -53,10 +53,14 @@ public class URLGrabber implements Runnable{
     // @Returns: A string containing the first-located URL. Return an empty string if nothing is found.
     private String parseURL(String s) {
             String b = " ";
-	 if (s.contains("http")) {  
-	   b = s.substring(s.indexOf("http"), s.length());
+	 if (s.contains("http")) {
+	       for (int i = s.indexOf("http"); i < s.length(); i++) {
+			if (s.charAt(i) == ' ') {
+	   b = s.substring(s.indexOf("http"), i - 1);
+	       }
 	 }
-	 else if (s.contains(".com") {
+	 }
+	 else if (s.contains(".com")) {
 		  for(int i = s.indexOf(".com"); i > 0; i-- ) {			       
 			 if(s.charAt(i) == ' ') { 
 		         b = s.substring(i + 1, s.indexOf(".com") + 4);
@@ -64,6 +68,39 @@ public class URLGrabber implements Runnable{
                    } 		
 		  }
 	       }
+	       else if (s.contains(".org")) {
+		       for (int i = s.indexOf(".org"); i > 0; i--) {
+			       if(s.charAt(i) == ' ') {
+				       b = s.substring(i + 1, s.indexOf(".org") + 4);
+				       break;
+			       }
+		       }
+	       }
+	       else if (s.contains(".co")) {                                                                                                                                                   for (int i = s.indexOf(".co"); i > 0; i--) {
+		                                      if(s.charAt(i) == ' ') {                                                                                                                                                        b = s.substring(i + 1, s.indexOf(".co") + 3);                                                                                                                          break;
+							                                     }
+						                             }
+									                    }
+	        else if (s.contains(".edu")) {                                                                                                                                                   for (int i = s.indexOf(".edu"); i > 0; i--) {
+			                               if(s.charAt(i) == ' ') {                                                                                                                                                        b = s.substring(i + 1, s.indexOf(".edu") + 4);                                                                                                                          break;
+							                                      }
+						                              }
+									                     }
+		
+		 else if (s.contains(".gov")) {                                                                                                                                                   for (int i = s.indexOf(".gov"); i > 0; i--) {
+                               if(s.charAt(i) == ' ') {                                                                                                                                                        b = s.substring(i + 1, s.indexOf(".gov") + 4);                                                                                                                          break;
+	                                     }
+                       }
+               }
+		else if (s.contains(".net")) {
+	 		for (int i = s.indexOf(".net"); i > 0; i--) {
+				if (s.charAt(i) == ' ') {
+					b = s.substring(i + 1, s.indexOf(".net") + 4);
+					break;
+				}
+			}
+		}
+
 	   return b; 
 	  //indexOf(String str) Returns the index within this string of the first occurrence of the specified substring
 	   // try {

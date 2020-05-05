@@ -67,10 +67,10 @@ public class TweetRepository {
         if (file.exists()) {
             System.out.println("Cannot save to disk, file " + path + " already exists!");
             return;
-        }
+       }
 
         // Try to write the file in TSV format
-        try {
+       try {
             file.createNewFile();                 // Create the file
             FileWriter fw = new FileWriter(file); // Object for writing to file
 
