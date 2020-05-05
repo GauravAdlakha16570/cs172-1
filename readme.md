@@ -1,6 +1,6 @@
 ### CS172 Project, Spring 2020
 
-Contributors: Aaron Sigal, Surya Kumaraguru, Gaurav Adlakha, <>
+Contributors: Aaron Sigal, Surya Kumaraguru, Gaurav Adlakha, Anthony Yip
 
 ##
 
