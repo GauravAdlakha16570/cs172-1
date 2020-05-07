@@ -57,6 +57,7 @@ public class URLGrabber implements Runnable{
 	       for (int i = s.indexOf("http"); i < s.length(); i++) {
 			if (s.charAt(i) == ' ') {
 	   b = s.substring(s.indexOf("http"), i - 1);
+	   break;
 	       }
 	 }
 	 }
@@ -77,7 +78,6 @@ public class URLGrabber implements Runnable{
 		       }
 	       }
 	       else if (s.contains(".co")) {                                                                                                                                                   for (int i = s.indexOf(".co"); i > 0; i--) {
-		 for (int i = s.indexOf(".co"); i > 0; i--) {
 			       if(s.charAt(i) == ' ') {
 				       b = s.substring(i + 1, s.indexOf(".co") + 3);
 				       break;
@@ -85,7 +85,6 @@ public class URLGrabber implements Runnable{
 		       }
 	       }
 	        else if (s.contains(".edu")) {                                                                                                                                                   for (int i = s.indexOf(".edu"); i > 0; i--) {
-		 for (int i = s.indexOf(".edu"); i > 0; i--) {
 			       if(s.charAt(i) == ' ') {
 				       b = s.substring(i + 1, s.indexOf(".edu") + 4);
 				       break;
@@ -93,7 +92,7 @@ public class URLGrabber implements Runnable{
 		       }
 	       }
 		
-		 else if (s.contains(".gov")) {                                                                                                                                                   for (int i = s.indexOf(".gov"); i > 0; i--) {
+		 else if (s.contains(".gov")) {                                                                                                                        
                                 for (int i = s.indexOf(".gov"); i > 0; i--) {
 			       if(s.charAt(i) == ' ') {
 				       b = s.substring(i + 1, s.indexOf(".gov") + 4);
