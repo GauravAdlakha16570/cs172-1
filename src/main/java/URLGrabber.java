@@ -77,14 +77,16 @@ public class URLGrabber implements Runnable{
 			       }
 		       }
 	       }
-	       else if (s.contains(".co")) {                                                                                                                                                  // for (int i = s.indexOf(".co"); i > 0; i--) {
+	       else if (s.contains(".co")) {    
+		       for (int i = s.indexOf(".co"); i > 0; i--) {
 			       if(s.charAt(i) == ' ') {
 				       b = s.substring(i + 1, s.indexOf(".co") + 3);
 				       break;
 			       }
 		       }
 	       }
-	        else if (s.contains(".edu")) {                                                                                                                                                  // for (int i = s.indexOf(".edu"); i > 0; i--) {
+	        else if (s.contains(".edu")) {  
+			for (int i = s.indexOf(".edu"); i > 0; i--) {
 			       if(s.charAt(i) == ' ') {
 				       b = s.substring(i + 1, s.indexOf(".edu") + 4);
 				       break;
