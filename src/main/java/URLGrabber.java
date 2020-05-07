@@ -77,21 +77,30 @@ public class URLGrabber implements Runnable{
 		       }
 	       }
 	       else if (s.contains(".co")) {                                                                                                                                                   for (int i = s.indexOf(".co"); i > 0; i--) {
-		                                      if(s.charAt(i) == ' ') {                                                                                                                                                        b = s.substring(i + 1, s.indexOf(".co") + 3);                                                                                                                          break;
-							                                     }
-						                             }
-									                    }
+		 for (int i = s.indexOf(".co"); i > 0; i--) {
+			       if(s.charAt(i) == ' ') {
+				       b = s.substring(i + 1, s.indexOf(".co") + 3);
+				       break;
+			       }
+		       }
+	       }
 	        else if (s.contains(".edu")) {                                                                                                                                                   for (int i = s.indexOf(".edu"); i > 0; i--) {
-			                               if(s.charAt(i) == ' ') {                                                                                                                                                        b = s.substring(i + 1, s.indexOf(".edu") + 4);                                                                                                                          break;
-							                                      }
-						                              }
-									                     }
+		 for (int i = s.indexOf(".edu"); i > 0; i--) {
+			       if(s.charAt(i) == ' ') {
+				       b = s.substring(i + 1, s.indexOf(".edu") + 4);
+				       break;
+			       }
+		       }
+	       }
 		
 		 else if (s.contains(".gov")) {                                                                                                                                                   for (int i = s.indexOf(".gov"); i > 0; i--) {
-                               if(s.charAt(i) == ' ') {                                                                                                                                                        b = s.substring(i + 1, s.indexOf(".gov") + 4);                                                                                                                          break;
-	                                     }
-                       }
-               }
+                                for (int i = s.indexOf(".gov"); i > 0; i--) {
+			       if(s.charAt(i) == ' ') {
+				       b = s.substring(i + 1, s.indexOf(".gov") + 4);
+				       break;
+			       }
+		       }
+	       }
 		else if (s.contains(".net")) {
 	 		for (int i = s.indexOf(".net"); i > 0; i--) {
 				if (s.charAt(i) == ' ') {
@@ -102,16 +111,7 @@ public class URLGrabber implements Runnable{
 		}
 
 	   return b; 
-	  //indexOf(String str) Returns the index within this string of the first occurrence of the specified substring
-	   // try {
-	//	       	URL url = new URL(b);
-	//	 b = url.getHost();
-       // return b;
-	//	}
-	//	catch (Exception e) {
-	//		return "";
-	//	}
-
+	 
       
     }
 
