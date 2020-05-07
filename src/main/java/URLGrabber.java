@@ -104,6 +104,10 @@ public class URLGrabber implements Runnable{
                     b = s.substring(s.indexOf("http"), i);
                     break;
                 }
+		else if (i == s.length() - 1) {
+			b = s.substring(s.indexOf("http"), i + 1);
+			break;
+		}
             }
         }
         else if (s.contains(".com")) {
@@ -112,6 +116,10 @@ public class URLGrabber implements Runnable{
                     b = s.substring(i + 1, s.indexOf(".com") + 4);
                     break;
                 }
+		else if (i == 1) {
+			b = s.substring( i - 1, s.indexOf(".com") + 4 );
+			break;
+		}
             }
         }
         else if (s.contains(".org")) {
@@ -120,6 +128,10 @@ public class URLGrabber implements Runnable{
                     b = s.substring(i + 1, s.indexOf(".org") + 4);
                     break;
                 }
+		else if (i == 1) {
+		    b = s.substring(i - 1, s.indexOf(".org") + 4);
+		    break;
+		}
             }
         }
         else if (s.contains(".co")) {
@@ -128,6 +140,10 @@ public class URLGrabber implements Runnable{
                     b = s.substring(i + 1, s.indexOf(".co") + 3);
                     break;
                 }
+		else if (i == 1) {
+		    b = s.substring(i - 1, s.indexOf(".co") + 3);
+		    break;
+		}
             }
         }
         else if (s.contains(".edu")) {
@@ -136,6 +152,10 @@ public class URLGrabber implements Runnable{
                     b = s.substring(i + 1, s.indexOf(".edu") + 4);
                     break;
                 }
+		else if (i == 1) {
+		    b = s.substring(i - 1, s.indexOf(".edu") + 4);
+		    break;
+		}
             }
         }
 
@@ -145,6 +165,10 @@ public class URLGrabber implements Runnable{
                     b = s.substring(i + 1, s.indexOf(".gov") + 4);
                     break;
                 }
+		else if (i == 1) {
+		    b = s.substring(i - 1, s.indexOf(".gov") + 4);
+			break;
+		}
             }
         }
         else if (s.contains(".net")) {
@@ -153,6 +177,10 @@ public class URLGrabber implements Runnable{
                     b = s.substring(i + 1, s.indexOf(".net") + 4);
                     break;
                 }
+		else if (i == 1) {
+		    b = s.substring(i - 1, s.indexOf(".net") + 4);
+		    break;
+		}
             }
         }
 
@@ -165,15 +193,15 @@ public class URLGrabber implements Runnable{
 //return: string containing the title of the page
     private String urlTitle(String url)  {
        // Document urltitle;
-       /* try {
+        try {
          Document urltitle = Jsoup.connect(url).get();
             return urltitle.title(); // adapted from https://jsoup.org/cookbook/input/load-document-from-url
         }
         catch (Exception e) {
             return "no title exists";
-        }*/
+        }
 
-	    InputStream input = null;
+	    /*InputStream input = null;
 	    try {
 		    input = new URL (url).openStream();
 		    Scanner scan = new Scanner(input);
@@ -192,7 +220,7 @@ public class URLGrabber implements Runnable{
 			  //  ex.printStackTree();
 			  System.out.println("error");
 		    }
-	    }
+	    }*/
 
 		
     
