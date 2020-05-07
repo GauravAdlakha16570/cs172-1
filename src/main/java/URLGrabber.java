@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
 import java.util.LinkedList;
 import java.net.URL;
 import org.jsoup.*;
@@ -99,7 +101,7 @@ public class URLGrabber implements Runnable{
         if (s.contains("http")) {
             for (int i = s.indexOf("http"); i < s.length(); i++) {
                 if (s.charAt(i) == ' ') {
-                    b = s.substring(s.indexOf("http"), i - 1);
+                    b = s.substring(s.indexOf("http"), i);
                     break;
                 }
             }
@@ -161,15 +163,38 @@ public class URLGrabber implements Runnable{
     //returns the title of the document(url) passed in as a string
 //paramater 0: url in string form
 //return: string containing the title of the page
-    private String urlTitle(String url) {
-        Document urltitle;
-        try {
-            urltitle = Jsoup.connect(url).get();
+    private String urlTitle(String url)  {
+       // Document urltitle;
+       /* try {
+         Document urltitle = Jsoup.connect(url).get();
             return urltitle.title(); // adapted from https://jsoup.org/cookbook/input/load-document-from-url
         }
         catch (Exception e) {
             return "no title exists";
-        }
+        }*/
 
+	    InputStream input = null;
+	    try {
+		    input = new URL (url).openStream();
+		    Scanner scan = new Scanner(input);
+		    String body = scan.useDelimiter("\\A").next();
+		    body = body.substring(body.indexOf("<title>") + 7, body.indexOf("</title>"));
+		    return body;
+	    }
+	    catch (IOException ex) {
+		    return "unable to get title";
+	    }
+	    finally {
+		    try {
+			    input.close();
+		    }
+		    catch (IOException ex) {
+			  //  ex.printStackTree();
+			  System.out.println("error");
+		    }
+	    }
+
+		
+    
     }
 }
