@@ -106,7 +106,7 @@ public class Crawler implements StatusListener {
         try {
             fields[2] = sanitizeString(tweet.getGeoLocation().toString().replaceAll("\n", ""));
         } catch (NullPointerException npe) {
-            fields[2] = "0,0";
+            fields[2] = "GeoLocation{latitude=0. longitude=0}";
         }
 
         // Text of User's Tweet
@@ -126,21 +126,23 @@ public class Crawler implements StatusListener {
                 System.out.println("[INFO]: Analyzer " + id + " has started running");
 
                 List<Status> tempTweets = new ArrayList<Status>(); // process buffer
-
-                while (true) {
+                boolean running = true;
+                while (running) {
                     if (tweets.size() > 0 && pasued == false) {        // Dump the current batch of tweets into the processing buffer
                         tempTweets.clear();         // Clear the buffer
                         tweets.drainTo(tempTweets); // Dump
 
-                        System.out.print("[DEBUG]: Inserting " + tempTweets.size() + " tweets...");
+                        System.out.println("[DEBUG]: Inserting " + tempTweets.size() + " tweets...");
 
                         // Use a thread-safe approach to insert the tweets in the buffer into the tweetRepository
                         for (Status s : tempTweets) {
                             synchronized (tweetRepository) { // Ensure synchronous access across threads
-                                tweetRepository.insert(getTweetFields(s)); // Add the tweet array to the repository
+                                if(!tweetRepository.insert(getTweetFields(s))) { // Add the tweet array to the repository
+                                    running = false;
+                                    break;
+                                }
                             }
                         }
-                        System.out.println(" done.");
                     }
 
                     try {
@@ -158,7 +160,7 @@ public class Crawler implements StatusListener {
     }
 
     public static String sanitizeString(final String s) {
-        return s.replaceAll("\n", " ").replaceAll("\t", " ").replaceAll("," , ".").replaceAll("\"", "").replaceAll("\\P{Print}", "");
+        return s.replaceAll("\n", " ").replaceAll("\t", " ").replaceAll("," , ".").replaceAll("\"", " ").replaceAll("\\P{Print}", " ");
     }
 
     /*********************************/

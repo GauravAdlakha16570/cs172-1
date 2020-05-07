@@ -11,8 +11,8 @@ public class TweetRepository {
 
     public static final int NUM_TWEET_FIELDS = 5;
     public static final int TWEET_TEXT_INDEX = 3;
-    //public static final int MAX_ENTRIES = (int)(250000.0 / (100.0 / 17.3)); // Total number of entries this structure can have before it stops recording data.
-    public static final int MAX_ENTRIES = 500; // Debugging value
+    //public static final int MAX_ENTRIES = (int)( (250000.0 / (100.0 / 17.3)* 0.89)   ); // Total number of entries this structure can have before it stops recording data.
+    public static final int MAX_ENTRIES = 100; // Debugging value
 
     ArrayList<String[]> tweets;
 
@@ -53,6 +53,7 @@ public class TweetRepository {
 
         // We need to stop inserting after a certain point so that we can empty the structure into a text file. The URLGrabber needs to finish with this object before it can be dumped.
         if(getSize() >= MAX_ENTRIES) {
+            System.out.println( Thread.currentThread().getName() + ": Can't add, am full"); //TODO REMOVE DEBUG CODE
             return false;
         }
 

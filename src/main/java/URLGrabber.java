@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 public class URLGrabber implements Runnable{
 
     boolean busy = false;
-    final static long DELAY_FOR_WORK = 1000; // The amount of time a work-less URLGrabber will wait before checking for work again
+    final static long DELAY_FOR_WORK = 5; // The amount of time a work-less URLGrabber will wait before checking for work again
 
     LinkedList<TweetRepository> repositoryQueue = new LinkedList<TweetRepository>(); // Queue of repositories for the grabber to work on
 
@@ -16,11 +16,17 @@ public class URLGrabber implements Runnable{
     public void run() {
 
         while(true) {
-            if(repositoryQueue.size() == 0) { // If there are no repos to work on
+            if(this.repositoryQueue.size() == 0) { // If there are no repos to work on
+            busy = false;
 
-                if (Manager.repositoryQueue.size > 0) {
-                    addRepository(Manager.repositoryQueue.pop());
+                synchronized (Manager.repositoryQueue) {
+                    if (Manager.repositoryQueue.size() > 0) {
+                        System.out.print("[INFO]: " + Thread.currentThread().getName() + " started processing a repository!");
+                        addRepository(Manager.repositoryQueue.pop());
+                        busy = true;
+                    }
                 }
+
                 try {
                     Thread.sleep(DELAY_FOR_WORK); // Sleep the thread to save power
                 } catch (InterruptedException e) {
@@ -28,8 +34,8 @@ public class URLGrabber implements Runnable{
                 }
             } else { // There's at least one repo to work on
                 processRepository(repositoryQueue.peek()); // Check the top repo
-                System.out.println("[INFO]: Writing tweets to disk...");
 
+                System.out.println("[INFO]: Writing tweets to disk...");
                 File f = new File(Manager.DEFAULT_OUTPUT_DIR); // Create the folder to save in
                 f.mkdir();
 
@@ -40,14 +46,13 @@ public class URLGrabber implements Runnable{
                                                       "_tweets.tsv"); // Write the repo to disk
                 }
 
-                //TODO: Remove debug code
-                System.out.print("[DEBUG]: Exiting system...");
-                System.exit(0);
-
                 repositoryQueue.removeFirst(); // Remove the repo that we just saved from the queue
+                busy = false;
+
+                System.out.print("[INFO]: " + Thread.currentThread().getName() + " finished processing a repository!");
+
             }
         }
-
     }
 
     /*********************************/
@@ -56,8 +61,11 @@ public class URLGrabber implements Runnable{
 
     // @Param 0: A repo to add to the queue
     // @Desc   : Adds a repo to the queue
-    public void addRepository(final TweetRepository tweetRepository) {
-        repositoryQueue.add(tweetRepository);
+    public void addRepository(TweetRepository tweetRepository) {
+
+        if (!repositoryQueue.contains(tweetRepository)) {
+            repositoryQueue.add(tweetRepository);
+        }
     }
 
 
@@ -70,51 +78,97 @@ public class URLGrabber implements Runnable{
     // @Desc:    For each entry in the repository, if it contains a url in its text field, add the header of that URL to its entry in the repositroy
     // @Returns: A boolean representing whether or not the processing was successful
     private boolean processRepository(final TweetRepository tweetRepository) {
-        busy = true; // The URLGrabber is now doing work
-
-        System.out.println("[INFO]: URLGrabber starting work");
 
         for (String[] tweetFields : tweetRepository.tweets) { // For each tweet in the repo
             tweetFields[TweetRepository.NUM_TWEET_FIELDS - 1] = Crawler.sanitizeString(urlTitle(parseURL(tweetFields[TweetRepository.TWEET_TEXT_INDEX]))); // Write the parsed URL into the last spot in the tweet's array
         }
 
-        tweetRepository.setGrabbed(true); // Mark that all tweets have been URLGrabbed
-
-        System.out.println("[INFO]: URLGrabber finished work");
-        busy = false; // The URLGrabber is done doing work
-
+        tweetRepository.setGrabbed(true); // Mark that all tweets have been URLGrabber
         return true;  // Nothing went wrong, return true
     }
 
-    //TODO: Fix
+    /*********************************/
+    /*      Helper Methods           */
+    /*********************************/
+
     // @Param 0: A string from which to parse a url
     // @Desc:    Parse a URL from a string
     // @Returns: A string containing the first-located URL. Return an empty string if nothing is found.
     private String parseURL(String s) {
-        try {
-            URL url = new URL(s);
-            s = url.getHost(); //adapted from https://docs.oracle.com/javase/tutorial/networking/urls/urlInfo.html
-            return s;
+        String b = " ";
+        if (s.contains("http")) {
+            for (int i = s.indexOf("http"); i < s.length(); i++) {
+                if (s.charAt(i) == ' ') {
+                    b = s.substring(s.indexOf("http"), i - 1);
+                    break;
+                }
+            }
         }
-        catch (Exception e) {
-            return "could not find URL";
+        else if (s.contains(".com")) {
+            for(int i = s.indexOf(".com"); i > 0; i-- ) {
+                if(s.charAt(i) == ' ') {
+                    b = s.substring(i + 1, s.indexOf(".com") + 4);
+                    break;
+                }
+            }
         }
+        else if (s.contains(".org")) {
+            for (int i = s.indexOf(".org"); i > 0; i--) {
+                if(s.charAt(i) == ' ') {
+                    b = s.substring(i + 1, s.indexOf(".org") + 4);
+                    break;
+                }
+            }
+        }
+        else if (s.contains(".co")) {
+            for (int i = s.indexOf(".co"); i > 0; i--) {
+                if(s.charAt(i) == ' ') {
+                    b = s.substring(i + 1, s.indexOf(".co") + 3);
+                    break;
+                }
+            }
+        }
+        else if (s.contains(".edu")) {
+            for (int i = s.indexOf(".edu"); i > 0; i--) {
+                if(s.charAt(i) == ' ') {
+                    b = s.substring(i + 1, s.indexOf(".edu") + 4);
+                    break;
+                }
+            }
+        }
+
+        else if (s.contains(".gov")) {
+            for (int i = s.indexOf(".gov"); i > 0; i--) {
+                if(s.charAt(i) == ' ') {
+                    b = s.substring(i + 1, s.indexOf(".gov") + 4);
+                    break;
+                }
+            }
+        }
+        else if (s.contains(".net")) {
+            for (int i = s.indexOf(".net"); i > 0; i--) {
+                if (s.charAt(i) == ' ') {
+                    b = s.substring(i + 1, s.indexOf(".net") + 4);
+                    break;
+                }
+            }
+        }
+
+        return b;
     }
 
-    //TODO: Fix
+
     //returns the title of the document(url) passed in as a string
-    //paramater 0: url in string form
-    //return: string containing the title of the page
+//paramater 0: url in string form
+//return: string containing the title of the page
     private String urlTitle(String url) {
         Document urltitle;
         try {
             urltitle = Jsoup.connect(url).get();
             return urltitle.title(); // adapted from https://jsoup.org/cookbook/input/load-document-from-url
         }
-        catch (IOException e) {
-            return "null";
-        } catch (IllegalArgumentException e) {
-            return "<Malformed URL: " + url + ">";
+        catch (Exception e) {
+            return "no title exists";
         }
 
     }
