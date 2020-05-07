@@ -5,6 +5,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.io.*;
 import java.util.Scanner;
+import java.util.*;
 
 public class Manager {
 
@@ -30,6 +31,7 @@ public class Manager {
     /*********************************/
 
     public static TweetRepository tweetRepository = new TweetRepository();
+    public static LinkedList<TweetRepository> repositoryQueue = new LinkedList<TweetRepository>();
 
     /*********************************/
     /*      Main method              */

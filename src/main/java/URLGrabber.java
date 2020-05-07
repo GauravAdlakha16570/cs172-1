@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 public class URLGrabber implements Runnable{
 
     boolean busy = false;
-    final static long DELAY_FOR_WORK = 100; // The amount of time a work-less URLGrabber will wait before checking for work again
+    final static long DELAY_FOR_WORK = 1000; // The amount of time a work-less URLGrabber will wait before checking for work again
 
     LinkedList<TweetRepository> repositoryQueue = new LinkedList<TweetRepository>(); // Queue of repositories for the grabber to work on
 
@@ -17,6 +17,10 @@ public class URLGrabber implements Runnable{
 
         while(true) {
             if(repositoryQueue.size() == 0) { // If there are no repos to work on
+
+                if (Manager.repositoryQueue.size > 0) {
+                    addRepository(Manager.repositoryQueue.pop());
+                }
                 try {
                     Thread.sleep(DELAY_FOR_WORK); // Sleep the thread to save power
                 } catch (InterruptedException e) {
