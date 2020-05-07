@@ -1,7 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
 import java.util.LinkedList;
 import java.net.URL;
 import org.jsoup.*;
@@ -96,21 +94,21 @@ public class URLGrabber implements Runnable{
     // @Param 0: A string from which to parse a url
     // @Desc:    Parse a URL from a string
     // @Returns: A string containing the first-located URL. Return an empty string if nothing is found.
-    private String parseURL(String s) {
-        String b = " ";
-        if (s.contains("http")) {
+    private String parseURL(String s) {//implementation not pretty but handles as many cases as I could think of
+        String b = " ";                // could be improved greatly
+        if (s.contains("http")) { //will handle both http and https
             for (int i = s.indexOf("http"); i < s.length(); i++) {
                 if (s.charAt(i) == ' ') {
                     b = s.substring(s.indexOf("http"), i);
                     break;
                 }
-		else if (i == s.length() - 1) {
+		else if (i == s.length() - 1) {//for if the url is at the end of the string
 			b = s.substring(s.indexOf("http"), i + 1);
 			break;
 		}
             }
         }
-        else if (s.contains(".com")) {
+        else if (s.contains(".com")) { 
             for(int i = s.indexOf(".com"); i > 0; i-- ) {
                 if(s.charAt(i) == ' ') {
                     b = s.substring(i + 1, s.indexOf(".com") + 4);
@@ -194,34 +192,12 @@ public class URLGrabber implements Runnable{
     private String urlTitle(String url)  {
        // Document urltitle;
         try {
-         Document urltitle = Jsoup.connect(url).get();
+         Document urltitle = Jsoup.connect(url).get();// connect to url and get html file to return title from
             return urltitle.title(); // adapted from https://jsoup.org/cookbook/input/load-document-from-url
         }
         catch (Exception e) {
             return "no title exists";
         }
-
-	    /*InputStream input = null;
-	    try {
-		    input = new URL (url).openStream();
-		    Scanner scan = new Scanner(input);
-		    String body = scan.useDelimiter("\\A").next();
-		    body = body.substring(body.indexOf("<title>") + 7, body.indexOf("</title>"));
-		    return body;
-	    }
-	    catch (IOException ex) {
-		    return "unable to get title";
-	    }
-	    finally {
-		    try {
-			    input.close();
-		    }
-		    catch (IOException ex) {
-			  //  ex.printStackTree();
-			  System.out.println("error");
-		    }
-	    }*/
-
 		
     
     }
