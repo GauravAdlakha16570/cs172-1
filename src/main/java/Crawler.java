@@ -107,8 +107,8 @@ public class Crawler implements StatusListener {
                 System.out.println("[INFO]: Analyzer " + id + " has started running");
 
                 List<Status> tempTweets = new ArrayList<Status>(); // process buffer
-
-                while (true) {
+		//int tempo = 10;//g
+                while (true)  { 
                     if (tweets.size() > 0) {        // Dump the current batch of tweets into the processing buffer
                         tempTweets.clear();         // Clear the buffer
                         tweets.drainTo(tempTweets); // Dump
@@ -132,6 +132,7 @@ public class Crawler implements StatusListener {
                     catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
+		   // tempo = tempo - 1; //g
 
                 }
             }

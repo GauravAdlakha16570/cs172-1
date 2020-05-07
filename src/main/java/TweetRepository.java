@@ -12,7 +12,7 @@ public class TweetRepository {
     public static final int NUM_TWEET_FIELDS = 5;
     public static final int TWEET_TEXT_INDEX = 3;
     //public static final int MAX_ENTRIES = (int)(250000.0 / (100.0 / 17.3)); // Total number of entries this structure can have before it stops recording data.
-    public static final int MAX_ENTRIES = 500; // Debugging value
+    public static final int MAX_ENTRIES = 100; // Debugging value
 
     ArrayList<String[]> tweets;
 

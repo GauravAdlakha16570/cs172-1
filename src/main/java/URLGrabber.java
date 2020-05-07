@@ -1,7 +1,11 @@
+
+import java.io.*;
 import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Scanner;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
-
 
 public class URLGrabber implements Runnable{
 
@@ -121,14 +125,38 @@ public class URLGrabber implements Runnable{
 //paramater 0: url in string form
 //return: string containing the title of the page
 private String urlTitle(String url) {
-	Document urltitle;
+	
 	try {	
-	urltitle = Jsoup.connect(url).get();
+	Document urltitle = Jsoup.connect(url).get();
 	return urltitle.title(); // adapted from https://jsoup.org/cookbook/input/load-document-from-url
 	}
 	catch (Exception e) {
 		return "no title exists";
 	}
+
+/*	InputStream input = null;                Second attempt
+
+	try {
+		input = new URL(url).openStream();
+		Scanner scan = new Scanner(input);
+		String inputBody = scan.useDelimiter("\\A").next();
+		String title = inputBody.substring(inputBody.indexOf("<title>") + 7, inputBody.indexOf("</title>"));//adapted from https://stackoverflow.com/questions/40099397/how-can-i-get-the-page-title-information-from-a-url-in-java
+		return title;
+
+	}
+	catch (IOExcpetion ex) {
+		ex.printStackTrace();
+		return "error";
 	
+	}
+	finally {
+		try {
+			input.close();
+			
+		}
+		catch (IOExcpetion ex) {
+			ex.printStackTrace();
+		}
+	}*/
 }
 }
