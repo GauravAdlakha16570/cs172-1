@@ -13,11 +13,10 @@ that JDK 1.8 is used and compiled at language level 1.5.
 
 ###Running The Project
 
-Run the included bash/batch file, depending on your OS.
+Install Maven, then run:
 
-Example usage:
-
-`./crawler.sh <seed-File:seed.txt> <num-pages: 10000> <hops-away: 6> <output-dir>`
+mvn package
+mvn exec:java
 
 ##
 
