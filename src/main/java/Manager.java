@@ -206,3 +206,12 @@ public class Manager {
 
     }
 }
+
+	private static void convertToQueue() {
+		int repositoryCounter = 0;
+		LinkedList<TweetRepository> repositoryQueue = new LinkedList<TweetRepository>();
+		while(Manager.tweetRepository.getSize() >= tweetRepository.NUM_ENTRIES) {
+			synchronized (Manager.repositoryQueue.add(tweetRepository);
+			repositoryCounter++;
+		}
+	}
